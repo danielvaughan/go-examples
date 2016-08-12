@@ -15,21 +15,22 @@ const (
 )
 
 func setupWorld(size int) [][]state {
+	rand.Seed(time.Now().UTC().UnixNano())
 	world := [][]state{}
 	for i := 0; i < size; i++ {
 		row := []state{}
 		for j := 0; j < size; j++ {
-			row = append(row, resolveState(rand.Intn(2)))
+			row = append(row, resolveState(rand.Intn(3)))
 		}
 		world = append(world, row)
 	}
 	return world
 }
 func resolveState(value int) state {
-	if value == 0 {
-		return KILLED
+	if value == 0 || value == 1{
+		return ACTIVE
 	}
-	return ACTIVE
+	return KILLED
 }
 
 //Gol main loop
@@ -37,12 +38,12 @@ func Gol(size int, generations int) {
 	world := setupWorld(size)
 	tm.Clear()
 	for i := 0; i < generations; i++ {
-		tm.MoveCursor(1,1)
+		tm.MoveCursor(1, 1)
 		world = recalculate(world)
 		fmt.Println(i)
 		printWorld(world)
 		tm.Flush()
-		time.Sleep(time.Second)
+		time.Sleep(time.Second/25)
 	}
 }
 
@@ -79,7 +80,15 @@ func recalculate(world [][]state) [][]state {
 
 func printWorld(world [][]state) {
 	for _, x := range world {
-		fmt.Println(x)
+		for _, y := range x {
+			if (y == ACTIVE){
+				fmt.Print("█")
+			}
+			if (y== KILLED) {
+				fmt.Print(" ")
+			}
+		}
+		fmt.Println()
 	}
 }
 func countLiveNeighbours(x int, y int, world [][]state) int {

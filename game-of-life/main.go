@@ -3,5 +3,7 @@ package main
 import "./gol"
 
 func main() {
-	gol.Gol(10, 30)
+	for i := 0; i < 100; i++ {
+		gol.Gol(40, 100)
+	}
 }
